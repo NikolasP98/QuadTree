@@ -4,11 +4,60 @@
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700&display=swap"
+			rel="stylesheet"
+		/>
+
 		<link rel="stylesheet" href="style.css" />
 		<title>Quadtree</title>
 	</head>
 	<body>
+		<div id="menu">
+			<div id="menu-header">--- Settings ---</div>
+			<div class="settings">
+				<!-- QUADTREE MAX DEPTH -->
+				<div class="option">
+					<label for="vstats">Max Depth</label>
+					<input
+						type="range"
+						name="viewStats"
+						id="qt-depth"
+						min="1"
+						max="10"
+						value="4"
+						oninput="this.nextElementSibling.value = this.value"
+					/>
+					<output>4</output>
+				</div>
+				<!-- QUADTREE MAX OBJECTS -->
+				<div class="option">
+					<label for="vstats">Max Children</label>
+					<input
+						type="range"
+						name="viewStats"
+						id="qt-depth"
+						min="1"
+						max="10"
+						value="4"
+						oninput="this.nextElementSibling.value = this.value"
+					/>
+					<output>4</output>
+				</div>
+				<div class="option">
+					<label for="vstats">View Stats</label>
+					<input type="checkbox" name="viewStats" id="vstats" />
+				</div>
+			</div>
+		</div>
+		<div id="onscreen-items">
+			<div>Items: <span id="items-count">0</span></div>
+			<div>Selection: <span id="items-selected">0</span></div>
+		</div>
 		<canvas id="canvas"></canvas>
-		<script src="test.js" type="module"></script>
+		<script src="draggable.js"></script>
+		<script src="main.js" type="module"></script>
 	</body>
 </html>

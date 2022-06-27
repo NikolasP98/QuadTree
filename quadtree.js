@@ -1,4 +1,4 @@
-class QuadTree {
+export default class QuadTree {
 	constructor(bounds, itemBounds = false, maxDepth = 4, maxCapacity = 4) {
 		let node;
 
@@ -21,13 +21,17 @@ class QuadTree {
 		}
 	}
 
+	query(bounds) {
+		return this.root.query(bounds);
+	}
+
 	clear() {
 		this.root.clear();
 	}
 }
 
 class Node {
-	constructor(bounds, depth, maxDepth = 4, maxCapacity = 4) {
+	constructor(bounds, depth = 0, maxDepth = 4, maxCapacity = 4) {
 		// bounds of the canvas
 		this.bounds = bounds;
 
@@ -42,7 +46,6 @@ class Node {
 
 		// Array of children bodies on canvas
 		this.children = [];
-
 		// Array of children of node objects caused by this.split()
 		this.nodes = [];
 
@@ -50,14 +53,43 @@ class Node {
 		this.TR = 1;
 		this.BL = 2;
 		this.BR = 3;
+
+		this.drawQuery = true;
+		this.queryBounds = {};
+	}
+
+	query(coordinates) {
+		this.queryBounds = coordinates;
+
+		// Will return an array regardless of level of quadtree
+		let bodies = this.children;
+		const indexes = this.getIndexes(coordinates);
+
+		// If there are child nodes, query them as well (will get plenty duplicate bodies)
+		if (this.nodes.length) {
+			for (const index of indexes) {
+				bodies = bodies.concat(this.nodes[index].query(coordinates));
+			}
+		}
+
+		// filter out duplicates
+
+		bodies = bodies.filter((item, index) => {
+			return bodies.indexOf(item) >= index;
+		});
+
+		return bodies;
 	}
 
 	insert(item) {
 		// ? If there are child nodes, skip to adding item to them
 
-		let index = this.getIndex(item);
+		let indexes = this.getIndexes(item);
+
 		if (this.nodes.length) {
-			this.nodes[index].insert(item);
+			for (const index of indexes) {
+				this.nodes[index].insert(item);
+			}
 			return;
 		}
 
@@ -83,14 +115,48 @@ class Node {
 		}
 	}
 
-	// ? What is this function doing?
-	getIndex(item) {
+	getItemCorners(item) {
+		const x = item.x || 0;
+		const y = item.y || 0;
+		const width = item.width;
+		const height = item.height;
+
+		const corners = [{ x, y }];
+
+		if (width && height) {
+			corners.push(
+				{ x: x + width, y },
+				{ x, y: y + height },
+				{
+					x: x + width,
+					y: y + height,
+				}
+			);
+		}
+
+		return corners;
+	}
+
+	getIndexes(item) {
+		const indexes = [];
+		const corners = this.getItemCorners(item);
+
+		for (let i = 0; i < corners.length; i++) {
+			indexes.push(this.getQuadrant(corners[i]));
+		}
+
+		return new Set(indexes);
+	}
+
+	getQuadrant(item) {
 		const bounds = this.bounds;
 
-		const LR = item.x > bounds.x + bounds.width / 2 ? 'R' : 'L';
-		const TB = item.y > bounds.y + bounds.height / 2 ? 'B' : 'T';
+		const horizontalMidpoint = bounds.y + bounds.height / 2;
+		const verticalMidpoint = bounds.x + bounds.width / 2;
 
-		// Set default node to Top Left
+		const TB = item.y > horizontalMidpoint ? 'B' : 'T';
+		const LR = item.x > verticalMidpoint ? 'R' : 'L';
+
 		let index = this[`${TB}${LR}`];
 
 		return index;
@@ -158,14 +224,25 @@ class Node {
 	}
 
 	draw(ctx) {
+		ctx.lineWidth = 2;
 		ctx.strokeStyle = '#ff00ff';
-		ctx.strokeWidth = 15;
+
 		ctx.strokeRect(
 			this.bounds.x,
 			this.bounds.y,
 			this.bounds.width,
 			this.bounds.height
 		);
+
+		if (this.drawQuery) {
+			ctx.strokeStyle = '#00ff00';
+			ctx.strokeRect(
+				this.queryBounds.x,
+				this.queryBounds.y,
+				this.queryBounds.width,
+				this.queryBounds.height
+			);
+		}
 
 		if (this.nodes.length > 0) {
 			for (let i = 0; i < this.nodes.length; i++) {
@@ -184,4 +261,8 @@ class Node {
 	}
 }
 
-class BoundedNode {}
+class BoundedNode extends Node {
+	constructor(bounds, depth, maxDepth = 4, maxCapacity = 4) {
+		super(bounds, depth, maxDepth, maxCapacity);
+	}
+}
