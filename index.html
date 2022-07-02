@@ -20,35 +20,48 @@
 			<div class="settings">
 				<!-- QUADTREE MAX DEPTH -->
 				<div class="option">
-					<label for="vstats">Max Depth</label>
+					<label for="qt-depth">Max Depth</label>
 					<input
 						type="range"
-						name="viewStats"
+						name="qt-depth"
 						id="qt-depth"
 						min="1"
-						max="10"
+						max="7"
 						value="4"
 						oninput="this.nextElementSibling.value = this.value"
 					/>
 					<output>4</output>
 				</div>
+
 				<!-- QUADTREE MAX OBJECTS -->
 				<div class="option">
-					<label for="vstats">Max Children</label>
+					<label for="qt-capacity">Max Children</label>
 					<input
 						type="range"
-						name="viewStats"
-						id="qt-depth"
+						name="qt-capacity"
+						id="qt-capacity"
 						min="1"
-						max="10"
+						max="9"
 						value="4"
 						oninput="this.nextElementSibling.value = this.value"
 					/>
 					<output>4</output>
 				</div>
+
+				<!-- VIEW STATS -->
 				<div class="option">
-					<label for="vstats">View Stats</label>
-					<input type="checkbox" name="viewStats" id="vstats" />
+					<label for="qt-stats">View Stats</label>
+					<input type="checkbox" name="qt-stats" id="qt-stats" />
+				</div>
+
+				<!-- SELECTOR SHAPE -->
+				<div class="option">
+					<label for="sel-shape">View Debug</label>
+					<select name="sel-shape" id="sel-shape">
+						<option value="square">Square</option>
+						<option value="circle">Circle</option>
+						<option value="cone">Cone</option>
+					</select>
 				</div>
 			</div>
 		</div>

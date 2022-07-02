@@ -1,14 +1,6 @@
 export default class QuadTree {
-	constructor(bounds, itemBounds = false, maxDepth = 4, maxCapacity = 4) {
-		let node;
-
-		if (!itemBounds) {
-			node = new Node(bounds, 0, maxDepth, maxCapacity);
-		} else {
-			node = new BoundedNode(bounds, 0, maxDepth, maxCapacity);
-		}
-
-		this.root = node;
+	constructor(bounds, maxDepth = 4, maxCapacity = 4) {
+		this.root = new Node(bounds, 0, maxDepth, maxCapacity);
 	}
 
 	insert(item) {
@@ -163,6 +155,7 @@ class Node {
 	}
 
 	split() {
+		console.log('split');
 		const depth = this.depth + 1;
 
 		// Origin of current Node (original node has 0,0)
