@@ -15,62 +15,11 @@
 		<title>Quadtree</title>
 	</head>
 	<body>
-		<div id="menu">
-			<div id="menu-header">--- Settings ---</div>
-			<div class="settings">
-				<!-- QUADTREE MAX DEPTH -->
-				<div class="option">
-					<label for="qt-depth">Max Depth</label>
-					<input
-						type="range"
-						name="qt-depth"
-						id="qt-depth"
-						min="1"
-						max="7"
-						value="4"
-						oninput="this.nextElementSibling.value = this.value"
-					/>
-					<output>4</output>
-				</div>
-
-				<!-- QUADTREE MAX OBJECTS -->
-				<div class="option">
-					<label for="qt-capacity">Max Children</label>
-					<input
-						type="range"
-						name="qt-capacity"
-						id="qt-capacity"
-						min="1"
-						max="9"
-						value="4"
-						oninput="this.nextElementSibling.value = this.value"
-					/>
-					<output>4</output>
-				</div>
-
-				<!-- VIEW STATS -->
-				<div class="option">
-					<label for="qt-stats">View Stats</label>
-					<input type="checkbox" name="qt-stats" id="qt-stats" />
-				</div>
-
-				<!-- SELECTOR SHAPE -->
-				<div class="option">
-					<label for="sel-shape">View Debug</label>
-					<select name="sel-shape" id="sel-shape">
-						<option value="square">Square</option>
-						<option value="circle">Circle</option>
-						<option value="cone">Cone</option>
-					</select>
-				</div>
-			</div>
-		</div>
 		<div id="onscreen-items">
 			<div>Items: <span id="items-count">0</span></div>
 			<div>Selection: <span id="items-selected">0</span></div>
 		</div>
 		<canvas id="canvas"></canvas>
-		<script src="/draggable.js"></script>
 		<script src="/main.js" type="module"></script>
 	</body>
 </html>

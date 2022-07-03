@@ -1,6 +1,21 @@
+import GUI from 'lil-gui';
+
 export default class QuadTree {
 	constructor(bounds, maxDepth = 4, maxCapacity = 4) {
 		this.root = new Node(bounds, 0, maxDepth, maxCapacity);
+		this.stats = false;
+		this.debug = false;
+		this.queryShape = 'square';
+
+		// start: DEBUG GUI
+		this.gui = new GUI();
+		this.gui.add(this.root, 'maxDepth', 1, 8, 1).name('Max Depth');
+		this.gui.add(this.root, 'maxCapacity', 1, 10, 1).name('Max Capacity');
+		this.gui.add(this, 'stats', false).name('Stats');
+		this.gui
+			.add(this, 'queryShape', ['square', 'circle', 'cone'])
+			.name('Query Shape');
+		// end: DEBUG GUI
 	}
 
 	insert(item) {
@@ -14,7 +29,7 @@ export default class QuadTree {
 	}
 
 	query(bounds) {
-		return this.root.query(bounds);
+		return this.root.query(bounds, this.queryShape);
 	}
 
 	clear() {
@@ -50,7 +65,7 @@ class Node {
 		this.queryBounds = {};
 	}
 
-	query(coordinates) {
+	query(coordinates, shape = 'square') {
 		this.queryBounds = coordinates;
 
 		// Will return an array regardless of level of quadtree
@@ -65,7 +80,6 @@ class Node {
 		}
 
 		// filter out duplicates
-
 		bodies = bodies.filter((item, index) => {
 			return bodies.indexOf(item) >= index;
 		});
@@ -74,10 +88,7 @@ class Node {
 	}
 
 	insert(item) {
-		// ? If there are child nodes, skip to adding item to them
-
 		let indexes = this.getIndexes(item);
-
 		if (this.nodes.length) {
 			for (const index of indexes) {
 				this.nodes[index].insert(item);
@@ -155,7 +166,6 @@ class Node {
 	}
 
 	split() {
-		console.log('split');
 		const depth = this.depth + 1;
 
 		// Origin of current Node (original node has 0,0)
@@ -251,11 +261,5 @@ class Node {
 		for (let i = 0; i < nodes.length; i++) {
 			nodes[i].clear();
 		}
-	}
-}
-
-class BoundedNode extends Node {
-	constructor(bounds, depth, maxDepth = 4, maxCapacity = 4) {
-		super(bounds, depth, maxDepth, maxCapacity);
 	}
 }

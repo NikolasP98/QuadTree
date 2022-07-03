@@ -7,29 +7,9 @@ let mouse = { x: 0, y: 0, width: 100, height: 100 };
 let queried = [];
 const points = [];
 
-const settings = {
-	maxDepth: 4,
-	maxCapacity: 4,
-	stats: false,
-	shape: 'square',
-};
-let quad = new QuadTree(
-	{
-		x: 0,
-		y: 0,
-		width: canvas.width,
-		height: canvas.height,
-	},
-	settings.maxDepth,
-	settings.maxCapacity
-);
+let totalBodies = 0;
 
-const getControls = () => {
-	settings.maxDepth = document.getElementById('qt-depth');
-	settings.maxCapacity = document.getElementById('qt-capacity');
-	settings.stats = document.getElementById('qt-stats');
-	settings.shape = document.getElementById('sel-shape');
-};
+let quad;
 
 const drawPoints = () => {
 	points.forEach((point) => {
@@ -48,6 +28,12 @@ const drawPoints = () => {
 const setup = () => {
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
+	quad = new QuadTree({
+		x: 0,
+		y: 0,
+		width: canvas.width,
+		height: canvas.height,
+	});
 
 	// start animation
 	requestAnimationFrame(animate);
@@ -55,17 +41,6 @@ const setup = () => {
 
 const animate = () => {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	getControls();
-	quad = new QuadTree(
-		{
-			x: 0,
-			y: 0,
-			width: canvas.width,
-			height: canvas.height,
-		},
-		settings.maxDepth,
-		settings.maxCapacity
-	);
 
 	// start main loop
 	quad.root.draw(ctx);
@@ -83,29 +58,37 @@ const animate = () => {
 // run setup function
 window.onload = () => {
 	setup();
+
+	// ? add event listeners after setup
+
+	// query bodies in mouse area
+	canvas.addEventListener('mousemove', (e) => {
+		mouse.x = e.x - mouse.width / 2;
+		mouse.y = e.y - mouse.height / 2;
+
+		queried = quad.query(mouse);
+
+		document.getElementById('items-selected').innerHTML = queried.length;
+	});
+
+	// add body to clicked coordinate
+	canvas.addEventListener('click', () => {
+		const body = {
+			x: mouse.x + mouse.width / 2 - 10,
+			y: mouse.y + mouse.height / 2 - 10,
+			width: 20,
+			height: 20,
+		};
+		quad.insert(body);
+		points.push(body);
+
+		totalBodies++;
+
+		document.getElementById('items-count').innerHTML = totalBodies;
+	});
 };
 
 // change canvas size as browser window resizes
 window.addEventListener('resize', () => {
 	setup();
-});
-
-// add body to clicked coordinate
-canvas.addEventListener('click', (e) => {
-	const body = {
-		x: mouse.x + mouse.width / 2 - 10,
-		y: mouse.y + mouse.height / 2 - 10,
-		width: 20,
-		height: 20,
-	};
-	quad.insert(body);
-	points.push(body);
-});
-
-// query bodies in mouse area
-canvas.addEventListener('mousemove', (e) => {
-	mouse.x = e.x - mouse.width / 2;
-	mouse.y = e.y - mouse.height / 2;
-
-	queried = quad.query(mouse);
 });
