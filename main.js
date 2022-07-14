@@ -1,7 +1,10 @@
+import GUI from 'lil-gui';
 import QuadTree from './quadtree';
 
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
+
+const stats = document.getElementById('stats');
 
 let mouse = { x: 0, y: 0, width: 100, height: 100 };
 let queried = [];
@@ -9,7 +12,12 @@ const points = [];
 
 let totalBodies = 0;
 
-let quad;
+let quad, gui;
+
+const settings = {
+	showStats: true,
+	queryShape: 'square',
+};
 
 const drawPoints = () => {
 	points.forEach((point) => {
@@ -28,12 +36,26 @@ const drawPoints = () => {
 const setup = () => {
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
+
+	gui.add(settings, 'showStats')
+
+		.onChange((e) => {
+			stats.hidden = !e;
+		})
+		.name('Show Stats');
+
+	gui.add(settings, 'queryShape', ['square', 'circle', 'cone']).name(
+		'Query Shape'
+	);
+
 	quad = new QuadTree({
 		x: 0,
 		y: 0,
 		width: canvas.width,
 		height: canvas.height,
 	});
+
+	QuadTree.debugger(gui, points);
 
 	// start animation
 	requestAnimationFrame(animate);
@@ -43,7 +65,7 @@ const animate = () => {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 	// start main loop
-	quad.root.draw(ctx);
+	quad.draw(ctx);
 
 	drawPoints();
 
@@ -57,6 +79,7 @@ const animate = () => {
 
 // run setup function
 window.onload = () => {
+	gui = new GUI();
 	setup();
 
 	// ? add event listeners after setup
@@ -66,7 +89,7 @@ window.onload = () => {
 		mouse.x = e.x - mouse.width / 2;
 		mouse.y = e.y - mouse.height / 2;
 
-		queried = quad.query(mouse);
+		queried = quad.query(mouse, settings.queryShape);
 
 		document.getElementById('items-selected').innerHTML = queried.length;
 	});

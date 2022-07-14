@@ -1,5 +1,6 @@
 // debug settings
 const settings = {
+	debug: true,
 	maxDepth: 4,
 	maxCapacity: 4,
 	stats: false,
@@ -14,7 +15,8 @@ export default class QuadTree {
 
 	static debugger(gui, points) {
 		if (!this.debug) {
-			// 	this.debug = true;
+			this.debug = true;
+			gui.add(settings, 'debug').name('Show QuadTree');
 			// 	gui.add(settings, 'maxDepth', 1, 8, 1)
 			// 		.name('Max Depth')
 			// 		.onFinishChange((e) => {
@@ -50,6 +52,12 @@ export default class QuadTree {
 
 	clear() {
 		this.root.clear();
+	}
+
+	draw(ctx) {
+		if (settings.debug) {
+			this.root.draw(ctx);
+		}
 	}
 }
 
