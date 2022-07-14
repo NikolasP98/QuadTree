@@ -1,21 +1,37 @@
-import GUI from 'lil-gui';
+// debug settings
+const settings = {
+	maxDepth: 4,
+	maxCapacity: 4,
+	stats: false,
+	queryShape: 'square',
+};
 
 export default class QuadTree {
-	constructor(bounds, maxDepth = 4, maxCapacity = 4) {
-		this.root = new Node(bounds, 0, maxDepth, maxCapacity);
-		this.stats = false;
-		this.debug = false;
-		this.queryShape = 'square';
+	static debug = false;
+	constructor(bounds) {
+		this.root = new Node(bounds, 0);
+	}
 
-		// start: DEBUG GUI
-		this.gui = new GUI();
-		this.gui.add(this.root, 'maxDepth', 1, 8, 1).name('Max Depth');
-		this.gui.add(this.root, 'maxCapacity', 1, 10, 1).name('Max Capacity');
-		this.gui.add(this, 'stats', false).name('Stats');
-		this.gui
-			.add(this, 'queryShape', ['square', 'circle', 'cone'])
-			.name('Query Shape');
-		// end: DEBUG GUI
+	static debugger(gui, points) {
+		if (!this.debug) {
+			// 	this.debug = true;
+			// 	gui.add(settings, 'maxDepth', 1, 8, 1)
+			// 		.name('Max Depth')
+			// 		.onFinishChange((e) => {
+			// 			qt.clear();
+			// 			qt.root.maxDepth = e;
+			// 			qt.insert(points);
+			// 			qt.
+			// 		});
+			// 	gui.add(settings, 'maxCapacity', 1, 10, 1)
+			// 		.name('Max Capacity')
+			// 		.onFinishChange((e) => {
+			// 			qt.clear();
+			// 			qt.root.maxCapacity = e;
+			// 			qt.insert(points);
+			// 		});
+			// }
+		}
 	}
 
 	insert(item) {
@@ -28,8 +44,8 @@ export default class QuadTree {
 		}
 	}
 
-	query(bounds) {
-		return this.root.query(bounds, this.queryShape);
+	query(bounds, shape = 'square') {
+		return this.root.query(bounds, shape);
 	}
 
 	clear() {
@@ -38,7 +54,12 @@ export default class QuadTree {
 }
 
 class Node {
-	constructor(bounds, depth = 0, maxDepth = 4, maxCapacity = 4) {
+	constructor(
+		bounds,
+		depth = 0,
+		maxDepth = settings.maxDepth,
+		maxCapacity = settings.maxCapacity
+	) {
 		// bounds of the canvas
 		this.bounds = bounds;
 
@@ -187,9 +208,7 @@ class Node {
 
 		this.nodes[this.TL] = new Node(
 			{ x: originX, y: originY, width: halfWidth, height: halfHeight },
-			depth,
-			this.maxDepth,
-			this.maxCapacity
+			depth
 		);
 		this.nodes[this.TR] = new Node(
 			{
@@ -198,9 +217,7 @@ class Node {
 				width: halfWidth,
 				height: halfHeight,
 			},
-			depth,
-			this.maxDepth,
-			this.maxCapacity
+			depth
 		);
 		this.nodes[this.BL] = new Node(
 			{
@@ -209,9 +226,7 @@ class Node {
 				width: halfWidth,
 				height: halfHeight,
 			},
-			depth,
-			this.maxDepth,
-			this.maxCapacity
+			depth
 		);
 		this.nodes[this.BR] = new Node(
 			{
@@ -220,9 +235,7 @@ class Node {
 				width: halfWidth,
 				height: halfHeight,
 			},
-			depth,
-			this.maxDepth,
-			this.maxCapacity
+			depth
 		);
 	}
 
@@ -258,8 +271,8 @@ class Node {
 
 	clear() {
 		this.children = [];
-		for (let i = 0; i < nodes.length; i++) {
-			nodes[i].clear();
+		for (let i = 0; i < this.nodes.length; i++) {
+			this.nodes[i].clear();
 		}
 	}
 }
