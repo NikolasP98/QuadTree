@@ -12,7 +12,8 @@ const points = [];
 
 let totalBodies = 0;
 
-let quad, gui;
+let quad, gui, frame;
+let controlsReady = false;
 
 const settings = {
 	showStats: true,
@@ -21,13 +22,13 @@ const settings = {
 
 const drawPoints = () => {
 	points.forEach((point) => {
-		ctx.fillStyle = '#ff0000';
+		ctx.fillStyle = '#1849c6';
 		ctx.fillRect(point.x, point.y, point.width || 5, point.height || 5);
 	});
 
 	if (queried) {
 		queried.forEach((point) => {
-			ctx.fillStyle = '#00ff00';
+			ctx.fillStyle = '#d6f05f';
 			ctx.fillRect(point.x, point.y, point.width || 5, point.height || 5);
 		});
 	}
@@ -37,16 +38,20 @@ const setup = () => {
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
 
-	gui.add(settings, 'showStats')
+	if (!controlsReady) {
+		gui.add(settings, 'showStats')
+			.onChange((e) => {
+				stats.hidden = !e;
+			})
+			.name('Show Stats');
 
-		.onChange((e) => {
-			stats.hidden = !e;
-		})
-		.name('Show Stats');
+		gui.add(settings, 'queryShape', ['square', 'circle', 'cone']).name(
+			'Query Shape'
+		);
 
-	gui.add(settings, 'queryShape', ['square', 'circle', 'cone']).name(
-		'Query Shape'
-	);
+		QuadTree.debugger(gui, points);
+		controlsReady = true;
+	}
 
 	quad = new QuadTree({
 		x: 0,
@@ -55,10 +60,23 @@ const setup = () => {
 		height: canvas.height,
 	});
 
-	QuadTree.debugger(gui, points);
+	if (!points.length) {
+		for (let i = 0; i < 92; i++) {
+			points.push({
+				x: 30 + Math.random() * Math.max(20, canvas.width - 60),
+				y: 80 + Math.random() * Math.max(20, canvas.height - 120),
+				width: 8,
+				height: 8,
+			});
+		}
+	}
+	quad.insert(points);
+	totalBodies = points.length;
+	document.getElementById('items-count').innerHTML = totalBodies;
 
 	// start animation
-	requestAnimationFrame(animate);
+	cancelAnimationFrame(frame);
+	frame = requestAnimationFrame(animate);
 };
 
 const animate = () => {
@@ -70,7 +88,7 @@ const animate = () => {
 	drawPoints();
 
 	// end main loop
-	requestAnimationFrame(animate);
+	frame = requestAnimationFrame(animate);
 };
 
 /* ---------------------------

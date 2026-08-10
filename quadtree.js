@@ -249,7 +249,7 @@ class Node {
 
 	draw(ctx) {
 		ctx.lineWidth = 2;
-		ctx.strokeStyle = '#ff00ff';
+		ctx.strokeStyle = '#1849c6';
 
 		ctx.strokeRect(
 			this.bounds.x,
@@ -259,7 +259,7 @@ class Node {
 		);
 
 		if (this.drawQuery) {
-			ctx.strokeStyle = '#00ff00';
+			ctx.strokeStyle = '#ad3f27';
 			ctx.strokeRect(
 				this.queryBounds.x,
 				this.queryBounds.y,

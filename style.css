@@ -1,23 +1,15 @@
-* {
-	padding: 0;
-	margin: 0;
-	box-sizing: border-box;
-	overflow: hidden;
-
-	font-family: 'Source Code Pro', monospace;
-}
-
-#stats {
-	padding: 5px 15px;
-	color: #fff;
-	position: absolute;
-	z-index: 999;
-	left: 0;
-}
-
-canvas {
-	background-color: black;
-	width: 100%;
-	height: 100%;
-	position: absolute;
-}
+:root { --carbon:#121613; --paper:#f1efe7; --slip:#e8e5db; --cobalt:#1849c6; --signal:#d6f05f; --proof:#ad3f27; }
+* { padding:0; margin:0; box-sizing:border-box; }
+html, body { width:100%; height:100%; overflow:hidden; font-family:'Source Code Pro', monospace; color:var(--carbon); background:var(--slip); }
+.docket { position:absolute; z-index:4; top:0; left:0; right:245px; min-height:52px; display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:.75rem 1rem; border:1px solid var(--carbon); background:rgba(241,239,231,.94); pointer-events:none; font:700 .64rem/1.3 'Source Code Pro',monospace; letter-spacing:.06em; }
+.docket div { display:flex; flex-wrap:wrap; gap:.65rem 1.2rem; }
+.docket strong { color:var(--cobalt); }
+.docket > span { color:var(--proof); }
+#stats { position:absolute; z-index:4; left:1rem; top:68px; display:flex; gap:1px; padding:0; border:1px solid var(--carbon); background:var(--paper); color:var(--carbon); pointer-events:none; }
+#stats div { padding:.65rem .75rem; font:700 .58rem/1 monospace; letter-spacing:.05em; }
+#stats div + div { border-left:1px solid var(--carbon); }
+#stats span { color:var(--cobalt); }
+.instruction { position:absolute; z-index:4; left:1rem; bottom:1rem; padding:.75rem .85rem; border:1px solid var(--carbon); background:var(--signal); box-shadow:3px 4px 0 rgba(18,22,19,.16); pointer-events:none; font:700 .6rem/1.3 monospace; }
+canvas { position:absolute; inset:0; display:block; width:100%; height:100%; background-color:var(--slip); }
+.lil-gui.root { --background-color:var(--paper); --widget-color:#dedbd1; --hover-color:var(--signal); --focus-color:var(--signal); --text-color:var(--carbon); --number-color:var(--cobalt); --string-color:var(--proof); --font-family:monospace; --font-size:11px; --widget-height:24px; width:245px; border-left:1px solid var(--carbon); border-bottom:1px solid var(--carbon); }
+@media (max-width:720px) { .docket{right:0}.docket>span{display:none}.lil-gui.root{top:53px;max-height:48vh;overflow-y:auto}.instruction{max-width:calc(100vw - 2rem)} }
