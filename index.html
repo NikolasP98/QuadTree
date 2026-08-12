@@ -25,6 +25,17 @@
 		</div>
 		<div class="instruction">MOVE TO QUERY · CLICK TO INSERT A RECORD ↗</div>
 		<canvas id="canvas"></canvas>
+		<script>
+			if (new URLSearchParams(location.search).get('lang') === 'es') {
+				document.documentElement.lang = 'es';
+				document.title = 'Consultas quadtree · Laboratorio Pinonite';
+				document.querySelector('.docket div').innerHTML = '<strong>PINONITE / LABORATORIO</strong><span>CONSULTA MENOS AL MUNDO</span>';
+				document.querySelector('.docket > span').textContent = 'CONSULTA QUADTREE · EN VIVO';
+				document.querySelector('#stats > div:first-child').childNodes[0].textContent = 'INDEXADOS ';
+				document.querySelector('#stats > div:last-child').childNodes[0].textContent = 'CANDIDATOS ';
+				document.querySelector('.instruction').textContent = 'MUEVE PARA CONSULTAR · CLIC PARA INSERTAR UN REGISTRO ↗';
+			}
+		</script>
 		<script src="/main.js" type="module"></script>
 	</body>
 </html>
