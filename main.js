@@ -1,6 +1,10 @@
 import GUI from 'lil-gui';
 import QuadTree from './quadtree';
 
+const locale = new URLSearchParams(window.location.search).get('lang') === 'es' ? 'es' : 'en';
+const t = (english, spanish) => locale === 'es' ? spanish : english;
+window.pnLocale = locale;
+
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
@@ -43,10 +47,12 @@ const setup = () => {
 			.onChange((e) => {
 				stats.hidden = !e;
 			})
-			.name('Show Stats');
+			.name(t('Show Stats', 'Mostrar estadísticas'));
 
-		gui.add(settings, 'queryShape', ['square', 'circle', 'cone']).name(
-			'Query Shape'
+		gui.add(settings, 'queryShape', locale === 'es'
+			? { Cuadrado: 'square', Círculo: 'circle', Cono: 'cone' }
+			: { Square: 'square', Circle: 'circle', Cone: 'cone' }).name(
+			t('Query Shape', 'Forma de consulta')
 		);
 
 		QuadTree.debugger(gui, points);
@@ -97,7 +103,7 @@ const animate = () => {
 
 // run setup function
 window.onload = () => {
-	gui = new GUI();
+	gui = new GUI({ title: t('Controls', 'Controles') });
 	setup();
 
 	// ? add event listeners after setup

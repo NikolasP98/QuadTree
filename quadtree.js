@@ -16,7 +16,7 @@ export default class QuadTree {
 	static debugger(gui, points) {
 		if (!this.debug) {
 			this.debug = true;
-			gui.add(settings, 'debug').name('Show QuadTree');
+			gui.add(settings, 'debug').name(window.pnLocale === 'es' ? 'Mostrar quadtree' : 'Show QuadTree');
 			// 	gui.add(settings, 'maxDepth', 1, 8, 1)
 			// 		.name('Max Depth')
 			// 		.onFinishChange((e) => {
